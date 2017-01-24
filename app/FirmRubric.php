@@ -14,4 +14,9 @@ class FirmRubric extends Model
     public $timestamps = false;
 
     public $fillable = ["title", "groupTitle", "activity_id" , "notNeed"];
+
+    public function activity()
+    {
+        return $this->belongsTo('App\Activity');
+    }
 }

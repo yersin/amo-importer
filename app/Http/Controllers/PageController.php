@@ -48,7 +48,8 @@ class PageController extends Controller
                     $company->addCustomField($this->crm->company["payment_type"], $firm->paymentMethod);
                     $company->addCustomField($this->crm->company["web"], $firm->links);
                     $company->addCustomField($this->crm->company["info"], $firm->info);
-                    $company->addCustomField($this->crm->company["category"], $firm->info);
+                    $company->addCustomField($this->crm->company["category"], $this->getCategory($firm));
+                    $company->addCustomField($this->crm->company["sub_category"], $this->getSubCategory($firm));
                     $companies[] = $company;
                 }
                 $amo->company->apiAdd($companies);
@@ -77,6 +78,23 @@ class PageController extends Controller
         return $phones;
     }
 
+    public function getCategory($firm)
+    {
+        $category = "";
+        foreach($firm->category as $cat){
+            if($cat->activity){
+                $category .= $cat->activity->name . ",";
+            }
+        }
+        return $category;
+    }
 
-
+    public function getSubCategory($firm)
+    {
+        $category = "";
+        foreach($firm->category as $cat){
+            $category .= $cat->groupTitle . ",";
+        }
+        return $category;
+    }
 }
