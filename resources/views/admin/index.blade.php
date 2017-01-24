@@ -10,7 +10,6 @@
             <th>#</th>
             <th>Категория</th>
             <th>Рубрика</th>
-            <th>Деятельность</th>
             <th>Нужные/Ненужные</th>
         </tr>
         <tr>
@@ -19,9 +18,6 @@
                     <td>{{ $key+1 }}</td>
                     <td>{{ $rubric->title }}</td>
                     <td>{{ $rubric->groupTitle }}</td>
-                    <td>
-                        {!! Form::select('activity_id', $acivities, $rubric->activity_id, ["class" => "activity form-control"]) !!}
-                    </td>
                     <td>
                         <input type="checkbox" class="rubric"  {{ $rubric->notNeed == \App\FirmRubric::NEED ? "checked" : "" }} >
                     </td>

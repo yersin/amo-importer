@@ -1,35 +1,19 @@
 @extends("layouts.admin")
 @section("content")
+
+    <h1> Интегрировано : <span style="color:green">{{ $integrated }}</span></h1>
+    <h1> Неинтегрированных фирм : <span style="color:red">{{ $not_integrated }}</span></h1>
     {!! Form::open(["style" => "width:40%;"]) !!}
 
         <div class="form-group">
-            <label>Название компании</label>
-            {!! Form::text('name', null, ["class" => "form-control", "required"]) !!}
+            <label>Интегрировать (общее количество)</label>
+            {!! Form::number('total', null, ["class" => "form-control"]) !!}
         </div>
 
         <div class="form-group">
-            <label>Адрес</label>
-            {!! Form::text('address', null, ["class" => "form-control", "required"]) !!}
+            <label>Отправлять по (количество)</label>
+            {!! Form::number('chunks', null, ["class" => "form-control"]) !!}
         </div>
-        <div class="form-group">
-            <label>Телефон</label>
-            {!! Form::text('phone', null, ["class" => "form-control", "required"]) !!}
-        </div>
-
-        <div class="form-group">
-            <label>EMAIl</label>
-            {!! Form::text('email', null, ["class" => "form-control", "required"]) !!}
-        </div>
-
-        <div class="form-group">
-            <label>Категория</label>
-            {!! Form::text('category', null, ["class" => "form-control", "required"]) !!}
-        </div>
-        <div class="form-group">
-            <label>Подкатегория</label>
-            {!! Form::text('sub_category', null, ["class" => "form-control", "required"]) !!}
-        </div>
-
         <input type="submit" class="btn btn-primary" value="Сохранить">
     {!! Form::close() !!}
 @stop

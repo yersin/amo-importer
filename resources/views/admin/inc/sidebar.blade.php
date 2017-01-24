@@ -14,13 +14,16 @@
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">
-            <li class="active">
-                <a href="/admin"><i class="fa fa-fw fa-dashboard"></i> Главная</a>
+            <li {{ Request::url() == url("/") ? "class=active" : "" }}>
+                <a href="/"><i class="fa fa-fw fa-dashboard"></i> Главная</a>
             </li>
-            <li>
+            <li {{ Request::url() == url("/admin") ? "class=active" : "" }}>
+                <a href="/admin"><i class="fa fa-fw fa-dashboard"></i> Нужная рубрика</a>
+            </li>
+            <li {{ str_contains(Request::url(), url("/admin/activities")) ? "class=active" : "" }}>
                 <a href="/admin/activities"><i class="fa fa-fw fa-dashboard"></i> Деятельность</a>
             </li>
-            <li>
+            <li {{ str_contains(Request::url(), url("/admin/rubric-activities")) ? "class=active" : "" }}>
                 <a href="/admin/rubric-activities"><i class="fa fa-fw fa-dashboard"></i> Рубрика </a>
             </li>
         </ul>

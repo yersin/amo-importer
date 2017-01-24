@@ -22,87 +22,22 @@ class PageController extends Controller
      */
     public function anyIndex()
     {
-        $firms = Firm::where("is_integrated", Firm::NOT_INTEGRATED)->take(10000)->get();
-        foreach (array_chunk($firms->all(), 500) as $key => $firm_rows){
-            foreach ($firm_rows as $firm){
-                $request = ["name" => $firm->title];
-                $request["custom_fields"] = [
-                    [
-                        'id'=> $this->crm->company['email'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->email,
-                                'enum'=>'WORK'
-                            ]
-                        ]
-                    ],
-                    [
-                        'id'=> $this->crm->company['phone'],
-                        'values'=> $this->getPhonesArray($firm)
-                    ],
-                    [
-                        'id'=> $this->crm->company['web'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->links,
-                            ]
-                        ],
-                    ],
-                    [
-                        'id'=> $this->crm->company['address'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->address,
-                            ]
-                        ]
-                    ],
-                    [
-                        'id'=> $this->crm->company['info'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->info,
-                            ]
-                        ]
-                    ],
-                    [
-                        'id'=> $this->crm->company['payment_type'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->paymentMethods,
-                            ]
-                        ]
-                    ],
-                    [
-                        'id'=> $this->crm->company['filial'],
-                        'values'=> [
-                            [
-                                'value'=> $firm->filials,
-                            ]
-                        ]
-                    ]
-                ];
-                $set['request']['contacts']['add'][] = $request;
-                dd($set);
-            }
-            if($this->crm->auth()){
-                $this->crm->add($set);
-            }
-
-            Firm::whereIn("id", array_pluck($firm_rows, "id"))
-                ->update(["is_integrated" => Firm::INTEGRATED]);
-        }
+        $integrated = Firm::where("is_integrated", Firm::INTEGRATED)->count();
+        $not_integrated = Firm::where("is_integrated", Firm::NOT_INTEGRATED)->count();
+        return view("pages.index", compact("integrated","not_integrated" ));
     }
 
-    public function getAmo()
+    public function postIndex(Request $request)
     {
         try {
             // Создание клиента
             $amo = new \AmoCRM\Client(CRMHelper::SUBDOMAIN, CRMHelper::USER_LOGIN, CRMHelper::USER_HASH);
-
-            $firms = Firm::where("isIntegrated", Firm::NOT_INTEGRATED)->take(10000)->get();
+            $total = $request->total ? $request->total: 5000;
+            $chunks = $request->chunk ? $request->chunk : 150;
+            $firms = Firm::where("isIntegrated", Firm::NOT_INTEGRATED)->take($total)->get();
             dd(Firm::where("isIntegrated", Firm::INTEGRATED)->get());
             $companies = [];
-            foreach (array_chunk($firms->all(), 500) as $key => $firm_rows){
+            foreach (array_chunk($firms->all(), $chunks) as $key => $firm_rows){
                 foreach ($firm_rows as $firm){
                     $company = $amo->company;
                     $company["name"] = $firm->title;
@@ -124,15 +59,10 @@ class PageController extends Controller
         } catch (\AmoCRM\Exception $e) {
             printf('Error (%d): %s' . PHP_EOL, $e->getCode(), $e->getMessage());
         }
+
+        return back()->with();
     }
 
-    public function postIndex(Request $request)
-    {
-//        dd($this->crm->getCurrentAccount()["custom_fields"]);
-        if($this->crm->auth()){
-            $this->crm->add($request->all());
-        }
-    }
 
     /*
      * METHODS
