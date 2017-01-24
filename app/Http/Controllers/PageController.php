@@ -22,8 +22,8 @@ class PageController extends Controller
      */
     public function anyIndex()
     {
-        $integrated = Firm::where("is_integrated", Firm::INTEGRATED)->count();
-        $not_integrated = Firm::where("is_integrated", Firm::NOT_INTEGRATED)->count();
+        $integrated = Firm::where("isIntegrated", Firm::INTEGRATED)->count();
+        $not_integrated = Firm::where("isIntegrated", Firm::NOT_INTEGRATED)->count();
         return view("pages.index", compact("integrated","not_integrated" ));
     }
 
@@ -54,7 +54,7 @@ class PageController extends Controller
                 }
                 $amo->company->apiAdd($companies);
                 Firm::whereIn("id", array_pluck($firm_rows, "id"))
-                    ->update(["is_integrated" => Firm::INTEGRATED]);
+                    ->update(["isIntegrated" => Firm::INTEGRATED]);
             }
 
         } catch (\AmoCRM\Exception $e) {
