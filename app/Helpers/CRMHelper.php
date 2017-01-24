@@ -27,7 +27,19 @@ class CRMHelper
         "web" => 1834850,
         "address" => 1834854,
         "category" => 1835044,
-        "sub_category" => 1835078
+        "sub_category" => 1835078,
+        "info" => 1859910,
+        "payment_type" => 1859912,
+        "filial" => 1859914,
+    ];
+
+    public $enums = [
+        "WORK"=> 4315568,
+        "WORKDD"=> 4315570,
+        "MOB"=> 4315572,
+        "FAX"=> 4315574,
+        "HOME"=> 4315576,
+        "OTHER"=> 4315578
     ];
 
 
@@ -112,30 +124,15 @@ class CRMHelper
         return $out != null;
     }
 
-    public function add($data, $type = "contacts"){
-        $request = ["name" => $data['name']];
+    public function add($data, $type = "company"){
 
-        foreach(array_keys($data) as $key){
-            if(!isset($this->company[$key]))
-                continue;
-
-            $request["custom_fields"][] = [
-                'id'=> $this->company[$key],
-                'values'=> [
-                    [
-                        'value'=>$data[$key],
-                    ]
-                ]
-            ];
-        }
-        $set['request']['contacts']['add'][] = $request;
         $link='https://'.self::SUBDOMAIN.'.amocrm.ru/private/api/v2/json/' .$type. '/set';
         $curl=curl_init(); #Сохраняем дескриптор сеанса cURL
         curl_setopt($curl,CURLOPT_RETURNTRANSFER,true);
         curl_setopt($curl,CURLOPT_USERAGENT,'amoCRM-API-client/1.0');
         curl_setopt($curl,CURLOPT_URL,$link);
         curl_setopt($curl,CURLOPT_CUSTOMREQUEST,'POST');
-        curl_setopt($curl,CURLOPT_POSTFIELDS,json_encode($set));
+        curl_setopt($curl,CURLOPT_POSTFIELDS,json_encode($data));
         curl_setopt($curl,CURLOPT_HTTPHEADER,array('Content-Type: application/json'));
         curl_setopt($curl,CURLOPT_HEADER,false);
         curl_setopt($curl,CURLOPT_COOKIEFILE, $this->cookie_path);
