@@ -28,7 +28,6 @@ class PageController extends Controller
      */
     public function anyIndex(Firm $firm)
     {
-        $a = env("hsdf");
         $integrated = $firm->where("isIntegrated", Firm::INTEGRATED)->count();
         $not_integrated = $firm->integrated()->get()->count();
         return view("pages.index", compact("integrated","not_integrated" ));
@@ -97,7 +96,7 @@ class PageController extends Controller
         $category = [];
         foreach($firm->category as $cat){
             if($cat->activity){
-                $category[] = $cat->activity->name;
+                $category[] = $this->crm->enums[$cat->activity->name];
             }
         }
         return $category;
