@@ -45,8 +45,8 @@ class PageController extends Controller
         try {
             // Создание клиента
             $amo = new \AmoCRM\Client($this->amo_subdomain, $this->amo_login, $this->amo_hash);
-            $total = $request->total ? $request->total: 1;
-            $chunks = $request->chunk ? $request->chunk : 1;
+            $total = $request->total ? $request->total: 5000;
+            $chunks = $request->chunk ? $request->chunk : 200;
             $firms = $firm->integrated()->take($total)->get();
             $company_fields = $this->crm->getCompanyFields($amo->account->apiCurrent()["custom_fields"]["companies"]);
             foreach (array_chunk($firms->all(), $chunks) as $key => $firm_rows){
