@@ -54,13 +54,13 @@ class PageController extends Controller
                 foreach ($firm_rows as $firm){
                     $company = $amo->company;
                     $company["name"] = $firm->title;
+                    $company['responsible_user_id'] = 607140;
                     $company->addCustomField($company_fields["address"], $firm->address);
                     $company->addCustomField($company_fields["email"], $firm->email, "WORK");
                     $company->addCustomField($company_fields["filial"], $firm->filials);
                     $company->addCustomField($company_fields["phone"], $this->getPhonesArray($firm));
                     $company->addCustomField($company_fields["payment_type"], $firm->paymentMethod);
                     $company->addCustomField($company_fields["web"], $firm->links);
-                    $company->addCustomField($company_fields["info"], $firm->info);
                     $company->addCustomMultiField($company_fields["category"], $this->getCategory($firm));
                     $company->addCustomField($company_fields["sub_category"], $this->getSubCategory($firm));
                     $companies[] = $company;
