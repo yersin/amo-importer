@@ -21,4 +21,13 @@ class Firm extends Model
         return $this->belongsToMany('App\FirmRubric', "FirmRubricRel", "firm_id", "rubric_id")
             ->where("notNeed", FirmRubric::NEED);
     }
+
+    public function integrated($integrated = self::NOT_INTEGRATED)
+    {
+        return $this->join('FirmRubricRel', 'Firm.id', '=', 'FirmRubricRel.firm_id')
+            ->join('FirmRubric', 'FirmRubric.rubric_id', '=', 'FirmRubricRel.rubric_id')
+            ->select('Firm.*')
+            ->where("Firm.isIntegrated", self::NOT_INTEGRATED)
+            ->where("FirmRubric.notNeed", FirmRubric::NEED)->distinct();
+    }
 }

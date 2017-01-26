@@ -22,15 +22,17 @@ class CRMHelper
      */
     public $company = [
         "name" => "NAME",
-        "phone" => 1834846,
-        "email" => 1834848,
-        "web" => 1834850,
-        "address" => 1834854,
-        "category" => 1835044,
-        "sub_category" => 1835078,
-        "info" => 1859910,
-        "payment_type" => 1859912,
-        "filial" => 1859914,
+    ];
+    public $company_names = [
+        "phone" => "Телефон",
+        "email" => "Email",
+        "web" => "Web",
+        "address" => "Адрес",
+        "category" => "Категория",
+        "sub_category" => "Подкатегория",
+        "info" => "Информация",
+        "payment_type" => "Вид оплаты",
+        "filial" => "Филиалы",
     ];
 
     public $enums = [
@@ -175,6 +177,18 @@ class CRMHelper
         {
             die('Ошибка: '.$E->getMessage().PHP_EOL.'Код ошибки: '.$E->getCode());
         }
+    }
+
+    public function getCompanyFields($company_fields){
+        foreach ($company_fields as $company_field){
+            foreach (array_keys($this->company_names) as $key){
+                if($this->company_names[$key] == $company_field["name"]){
+                    $this->company[$key] = $company_field["id"];
+                    break;
+                }
+            }
+        }
+        return $this->company;
     }
 
 }
