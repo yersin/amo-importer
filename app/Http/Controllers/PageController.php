@@ -46,11 +46,10 @@ class PageController extends Controller
         try {
             // Создание клиента
             $amo = new \AmoCRM\Client($this->amo_subdomain, $this->amo_login, $this->amo_hash);
-            $total = $request->total ? $request->total: 5000;
-            $chunks = $request->chunk ? $request->chunk : 150;
+            $total = $request->total ? $request->total: 1;
+            $chunks = $request->chunk ? $request->chunk : 1;
             $firms = $firm->integrated()->take($total)->get();
             $company_fields = $this->crm->getCompanyFields($amo->account->apiCurrent()["custom_fields"]["companies"]);
-
             foreach (array_chunk($firms->all(), $chunks) as $key => $firm_rows){
                 $companies = [];
                 foreach ($firm_rows as $firm){
@@ -63,7 +62,7 @@ class PageController extends Controller
                     $company->addCustomField($company_fields["payment_type"], $firm->paymentMethod);
                     $company->addCustomField($company_fields["web"], $firm->links);
                     $company->addCustomField($company_fields["info"], $firm->info);
-                    $company->addCustomField($company_fields["category"], $this->getCategory($firm));
+                    $company->addCustomMultiField($company_fields["category"], $this->getCategory($firm));
                     $company->addCustomField($company_fields["sub_category"], $this->getSubCategory($firm));
                     $companies[] = $company;
                 }
@@ -95,11 +94,10 @@ class PageController extends Controller
 
     public function getCategory($firm)
     {
-        $category = "";
+        $category = [];
         foreach($firm->category as $cat){
             if($cat->activity){
-                $category .= $cat->activity->name;
-                break;
+                $category[] = $cat->activity->name;
             }
         }
         return $category;
