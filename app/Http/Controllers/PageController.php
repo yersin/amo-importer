@@ -8,9 +8,6 @@ use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-
-
-
     /*
      * FIELDS
      */
@@ -101,7 +98,8 @@ class PageController extends Controller
         $category = "";
         foreach($firm->category as $cat){
             if($cat->activity){
-                $category .= $cat->activity->name . ",";
+                $category .= $cat->activity->name;
+                break;
             }
         }
         return $category;
