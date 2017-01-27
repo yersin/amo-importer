@@ -191,4 +191,13 @@ class CRMHelper
         return $this->company;
     }
 
+    public function getCategoryEnums($company_fields){
+        foreach ($company_fields as $company_field){
+            if($this->company_names["category"] == $company_field["name"]){
+                return $company_field["enums"];
+            }
+        }
+        return $this->company;
+    }
+
 }

@@ -10,6 +10,11 @@
     {!! Form::open(["style" => "width:40%;"]) !!}
 
         <div class="form-group">
+            <label>Amocrm</label>
+            {!! Form::select('amo_id', $amo_configs, request("id") ? request("id") : null, ["class" => "form-control amo_config"]) !!}
+        </div>
+
+        <div class="form-group">
             <label>Интегрировать (общее количество)</label>
             {!! Form::number('total', null, ["class" => "form-control"]) !!}
         </div>
@@ -20,4 +25,12 @@
         </div>
         <input type="submit" class="btn btn-primary" value="Сохранить">
     {!! Form::close() !!}
+
+    <script>
+        $(".amo_config").change(function(){
+            var id = $(this).val();
+            var url =  "?id=" + id;
+            window.location.href = url;
+        });
+    </script>
 @stop

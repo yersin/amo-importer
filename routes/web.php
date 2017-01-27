@@ -25,6 +25,8 @@ Route::group(['prefix' => 'admin'], function () {
 
     AdvancedRoute::controller("activities", 'Admin\ActivityController');
 
+    AdvancedRoute::controller("amo-configs", 'Admin\AmoConfigController');
+
     AdvancedRoute::controller("/", 'Admin\MainController');
 });
 

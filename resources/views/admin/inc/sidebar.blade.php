@@ -26,6 +26,9 @@
             <li {{ str_contains(Request::url(), url("/admin/rubric-activities")) ? "class=active" : "" }}>
                 <a href="/admin/rubric-activities"><i class="fa fa-fw fa-dashboard"></i> Рубрика </a>
             </li>
+            <li {{ str_contains(Request::url(), url("/admin/amo-configs")) ? "class=active" : "" }}>
+                <a href="/admin/amo-configs"><i class="fa fa-fw fa-cog"></i> Конфигурации amo </a>
+            </li>
         </ul>
     </div>
     <!-- /.navbar-collapse -->

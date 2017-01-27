@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AmoConfig;
 use App\Firm;
 use App\Helpers\CRMHelper;
 use Illuminate\Http\Request;
@@ -30,7 +31,8 @@ class PageController extends Controller
     {
         $integrated = $firm->where("isIntegrated", Firm::INTEGRATED)->count();
         $not_integrated = $firm->integrated()->get()->count();
-        return view("pages.index", compact("integrated","not_integrated" ));
+        $amo_configs = AmoConfig::all()->pluck("name", "id");
+        return view("pages.index", compact("integrated","not_integrated", "amo_configs" ));
     }
 
     public function anyAmo(Firm $firm)
@@ -42,13 +44,18 @@ class PageController extends Controller
 
     public function postIndex(Request $request, Firm $firm)
     {
+        $amo_config = AmoConfig::find($request->amo_id);
+        if(!$amo_config){
+            return back()->with("message", (object)["status" => "danger", "text" => " Не удалось добавить компании" ]);
+        }
         try {
             // Создание клиента
-            $amo = new \AmoCRM\Client($this->amo_subdomain, $this->amo_login, $this->amo_hash);
+            $amo = new \AmoCRM\Client($amo_config->subdomain, $amo_config->login, $amo_config->hash);
             $total = $request->total ? $request->total: 5000;
             $chunks = $request->chunk ? $request->chunk : 200;
             $firms = $firm->integrated()->take($total)->get();
-            $company_fields = $this->crm->getCompanyFields($amo->account->apiCurrent()["custom_fields"]["companies"]);
+            $custom_fields = $amo->account->apiCurrent()["custom_fields"]["companies"];
+            $company_fields = $this->crm->getCompanyFields($custom_fields);
             foreach (array_chunk($firms->all(), $chunks) as $key => $firm_rows){
                 $companies = [];
                 foreach ($firm_rows as $firm){
@@ -61,7 +68,7 @@ class PageController extends Controller
                     $company->addCustomField($company_fields["phone"], $this->getPhonesArray($firm));
                     $company->addCustomField($company_fields["payment_type"], $firm->paymentMethod);
                     $company->addCustomField($company_fields["web"], $firm->links);
-                    $company->addCustomMultiField($company_fields["category"], $this->getCategory($firm));
+                    $company->addCustomMultiField($company_fields["category"], $this->getCategory($firm, $custom_fields));
                     $company->addCustomField($company_fields["sub_category"], $this->getSubCategory($firm));
                     $companies[] = $company;
                 }
@@ -91,12 +98,14 @@ class PageController extends Controller
         return $phones;
     }
 
-    public function getCategory($firm)
+    public function getCategory($firm, $custom_fields)
     {
+        $category_enums = $this->crm->getCategoryEnums($custom_fields);
+        $category_enums = array_flip($category_enums);
         $category = [];
         foreach($firm->category as $cat){
-            if($cat->activity){
-                $category[] = $this->crm->enums[$cat->activity->name];
+            if($cat->activity && $category_enums[$cat->activity->name]){
+                $category[] = $category_enums[$cat->activity->name];
             }
         }
         return $category;
