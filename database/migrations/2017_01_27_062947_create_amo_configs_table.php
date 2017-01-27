@@ -13,10 +13,10 @@ class CreateAmoConfigsTable extends Migration
      */
     public function up()
     {
-        Schema::create('amo_configs', function (Blueprint $table) {
+        Schema::connection("mysql_han")->create('amo_configs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('subdomain');
+            $table->string('subdoman');
             $table->string('login');
             $table->string('hash');
             $table->timestamps();

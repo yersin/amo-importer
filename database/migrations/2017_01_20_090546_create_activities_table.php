@@ -13,8 +13,8 @@ class CreateActivitiesTable extends Migration
      */
     public function up()
     {
-        if ( ! Schema::hasTable('activities')) {
-            Schema::create('activities', function (Blueprint $table) {
+        if (Schema::connection("mysql_han")->hasTable('activities')) {
+            Schema::connection("mysql_han")->create('activities', function (Blueprint $table) {
                 $table->increments('id');
                 $table->string('name');
                 $table->timestamps();

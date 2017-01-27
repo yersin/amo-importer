@@ -8,9 +8,15 @@ use App\Http\Controllers\Controller;
 
 class ActivityController extends Controller
 {
+    public $act;
+    public function __construct(Activity $activity)
+    {
+        $this->act = $activity;
+        $this->act->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+    }
     public function anyIndex()
     {
-        $activities = Activity::orderBy("name")->paginate(10);
+        $activities = $this->act->orderBy("name")->paginate(10);
         return view("admin.activities.index", compact("activities"));
     }
 
@@ -21,27 +27,27 @@ class ActivityController extends Controller
 
     public function postAdd(Request $request)
     {
-        Activity::create($request->all());
+        $this->act->create($request->all());
         $message = ["status"=>"success", "text" => "Деятельность успешно добавлена"];
         return redirect("/admin/activities")->with("message", (object)$message);
     }
 
     public function getEdit($id)
     {
-        $activity = Activity::find($id);
+        $activity = $this->act->find($id);
         return view("admin.activities.edit", compact("activity"));
     }
 
     public function postEdit($id, Request $request)
     {
-        Activity::find($id)->update($request->all());
+        $this->act->find($id)->update($request->all());
         $message = ["status"=>"success", "text" => "Деятельность успешно отредактирована"];
         return redirect("/admin/activities")->with("message", (object)$message);
     }
 
     public function getRemove($id)
     {
-        $activity = Activity::find($id);
+        $activity = $this->act->find($id);
         if($activity){
             $activity->delete();
             $message = ["status"=>"success", "text" => "Деятельность успешно удалена"];

@@ -8,9 +8,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">SB Admin</a>
+        <a class="navbar-brand" href="/">SB Admin</a>
     </div>
     <!-- Top Menu Items -->
+    <div class="nav navbar-right top-nav">
+        {!! Form::select('project', ["mk"=> "Мир купонов", "han" => "Хан"], session("project") ? session("project") : null, ["class" => "project form-control"]) !!}
+    </div>
+
+
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav side-nav">

@@ -50,7 +50,8 @@
     @include("admin.inc.sidebar")
 
     <div id="page-wrapper">
-
+        <h1 align="center">CRM: {{ session("project") == "han" ? "Хан" : "Мир купонов" }}</h1>
+        <hr>
         @yield("content")
 
     </div>
@@ -58,7 +59,18 @@
 
 </div>
 <!-- /#wrapper -->
-
+<script>
+    $(".project").on("change", function () {
+        $.ajax({
+            url: "/set-project/" + $(this).val(),
+            method: "POST",
+            data: {_token:"{{ csrf_token() }}"},
+            success: function(){
+                location.reload();
+            }
+        });
+    });
+</script>
 
 
 </body>

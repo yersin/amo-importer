@@ -6,6 +6,7 @@ use App\AmoConfig;
 use App\Firm;
 use App\Helpers\CRMHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
 {
@@ -29,6 +30,7 @@ class PageController extends Controller
      */
     public function anyIndex(Firm $firm)
     {
+        $firm->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
         $integrated = $firm->where("isIntegrated", Firm::INTEGRATED)->count();
         $not_integrated = $firm->integrated()->get()->count();
         $amo_configs = AmoConfig::all()->pluck("name", "id");
@@ -44,6 +46,7 @@ class PageController extends Controller
 
     public function postIndex(Request $request, Firm $firm)
     {
+        $firm->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
         $amo_config = AmoConfig::find($request->amo_id);
         if(!$amo_config){
             return back()->with("message", (object)["status" => "danger", "text" => " Не удалось добавить компании" ]);
@@ -84,6 +87,12 @@ class PageController extends Controller
         return back()->with("message", (object)["status" => "success", "text" => "Добавлено: " . $total]);
     }
 
+    public function postSetProject($project)
+    {
+        if($project == "mk" || $project == "han"){
+            Session::put("project", $project);
+        }
+    }
 
     /*
      * METHODS
