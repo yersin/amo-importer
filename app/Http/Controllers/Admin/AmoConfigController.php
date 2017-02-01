@@ -8,16 +8,11 @@ use App\Http\Controllers\Controller;
 
 class AmoConfigController extends Controller
 {
-    public $amoConfig;
 
-    public function __construct(AmoConfig $amoConfig)
+    public function anyIndex(AmoConfig $amoConfig)
     {
-        $this->amoConfig = $amoConfig;
-        $this->amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
-    }
-    public function anyIndex()
-    {
-        $amo_configs = $this->amoConfig->all();
+        $amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $amo_configs = $amoConfig->all();
         return view("admin.amo.index", compact("amo_configs"));
     }
 
@@ -26,29 +21,33 @@ class AmoConfigController extends Controller
         return view("admin.amo.add");
     }
 
-    public function postAdd(Request $request)
+    public function postAdd(Request $request, AmoConfig $amoConfig)
     {
-        $this->amoConfig->create($request->all());
+        $amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $amoConfig->create($request->all());
         $message = ["status"=>"success", "text" => "Новая Amo конфигурация успешно добавлена"];
         return redirect("/admin/amo-configs")->with("message", (object)$message);
     }
 
-    public function getEdit($id)
+    public function getEdit($id, AmoConfig $amoConfig)
     {
-        $amo_config = $this->amoConfig->find($id);
+        $amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $amo_config = $amoConfig->find($id);
         return view("admin.amo.edit", compact("amo_config"));
     }
 
-    public function postEdit($id, Request $request)
+    public function postEdit($id, Request $request, AmoConfig $amoConfig)
     {
-        $this->amoConfig->find($id)->update($request->all());
+        $amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $amoConfig->find($id)->update($request->all());
         $message = ["status"=>"success", "text" => "Конфигурация amo успешно отредактирована"];
         return redirect("/admin/amo-configs")->with("message", (object)$message);
     }
 
-    public function getRemove($id)
+    public function getRemove($id, AmoConfig $amoConfig)
     {
-        $activity = $this->amoConfig->find($id);
+        $amoConfig->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity = $amoConfig->find($id);
         if($activity){
             $activity->delete();
             $message = ["status"=>"success", "text" => "Конфигурация amo успешно удалена"];

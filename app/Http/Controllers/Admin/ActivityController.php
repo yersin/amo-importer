@@ -8,15 +8,10 @@ use App\Http\Controllers\Controller;
 
 class ActivityController extends Controller
 {
-    public $act;
-    public function __construct(Activity $activity)
+    public function anyIndex(Activity $activity)
     {
-        $this->act = $activity;
-        $this->act->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
-    }
-    public function anyIndex()
-    {
-        $activities = $this->act->orderBy("name")->paginate(10);
+        $activity->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activities = $activity->orderBy("name")->paginate(10);
         return view("admin.activities.index", compact("activities"));
     }
 
@@ -25,29 +20,32 @@ class ActivityController extends Controller
         return view("admin.activities.add");
     }
 
-    public function postAdd(Request $request)
+    public function postAdd(Request $request,Activity $activity)
     {
-        $this->act->create($request->all());
+        $activity->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity->create($request->all());
         $message = ["status"=>"success", "text" => "Деятельность успешно добавлена"];
         return redirect("/admin/activities")->with("message", (object)$message);
     }
 
-    public function getEdit($id)
+    public function getEdit($id, Activity $act)
     {
-        $activity = $this->act->find($id);
+        $act->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity = $act->find($id);
         return view("admin.activities.edit", compact("activity"));
     }
 
-    public function postEdit($id, Request $request)
+    public function postEdit($id, Request $request, Activity $act)
     {
-        $this->act->find($id)->update($request->all());
+        $act->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $act->find($id)->update($request->all());
         $message = ["status"=>"success", "text" => "Деятельность успешно отредактирована"];
         return redirect("/admin/activities")->with("message", (object)$message);
     }
 
-    public function getRemove($id)
+    public function getRemove($id, Activity $act)
     {
-        $activity = $this->act->find($id);
+        $activity = $act->find($id);
         if($activity){
             $activity->delete();
             $message = ["status"=>"success", "text" => "Деятельность успешно удалена"];

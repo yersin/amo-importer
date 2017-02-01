@@ -20,16 +20,17 @@ class MainController extends Controller
         $this->firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
         $this->act->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
     }
-    public function anyIndex()
+    public function anyIndex(FirmRubric $firmRubric, Activity $activity)
     {
-        $rubrics = $this->firmRubric->orderBy("groupTitle")->paginate(20);
-        $acivities = $this->act->pluck("name", "id");
-        return view("admin.index", compact("rubrics", "acivities"));
+        $firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $rubrics = $firmRubric->orderBy("groupTitle")->paginate(20);
+        return view("admin.index", compact("rubrics"));
     }
 
-    public function postIndex(Request $request)
+    public function postIndex(Request $request, FirmRubric $firmRubric)
     {
-        $rubric = $this->firmRubric->find($request->id);
+        $firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $rubric = $firmRubric->find($request->id);
         if(isset($request->need)){
             $need = $request->need == "true" ? FirmRubric::NEED : FirmRubric::NOT_NEED;
             if($rubric->notNeed != $need){
@@ -42,11 +43,13 @@ class MainController extends Controller
         }
     }
 
-    public function getRubricActivities()
+    public function getRubricActivities(FirmRubric $firmRubric, Activity $activity)
     {
-        $rubrics = $this->firmRubric->where("notNeed", FirmRubric::NEED)->orderBy("groupTitle")->paginate(20);
-        $acivities = $this->act->pluck("name", "id");
-        return view("admin.set_rubric_activities", compact("rubrics", "acivities"));
+        $firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $rubrics = $firmRubric->where("notNeed", FirmRubric::NEED)->orderBy("groupTitle")->paginate(20);
+        $activities = $activity->pluck("name", "id");
+        return view("admin.set_rubric_activities", compact("rubrics", "activities"));
     }
 
 }

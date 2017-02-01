@@ -19,7 +19,7 @@
                 <td>{{ $rubric->title }}</td>
                 <td>{{ $rubric->groupTitle }}</td>
                 <td>
-                    {!! Form::select('activity_id', $acivities, $rubric->activity_id, ["class" => "activity form-control"]) !!}
+                    {!! Form::select('activity_id', $activities, $rubric->activity_id, ["class" => "activity form-control"]) !!}
                 </td>
             </tr>
             @endforeach
