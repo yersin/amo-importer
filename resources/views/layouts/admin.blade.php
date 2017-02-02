@@ -60,7 +60,7 @@
 </div>
 <!-- /#wrapper -->
 <script>
-    $(".project").on("change", function () {
+    $("body").on("change", ".project", function () {
         $.ajax({
             url: "/set-project/" + $(this).val(),
             method: "POST",

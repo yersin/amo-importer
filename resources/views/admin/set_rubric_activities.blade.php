@@ -11,7 +11,7 @@
     <hr>
     {!! $rubrics->render() !!}
     <script>
-        $(".activity").on("change", function () {
+        $("body").on("change", ".activity", function () {
             var activity_id = $(this).val();
             var id = $(this).closest("tr").data("id");
             var params = {id:id, activity_id: activity_id, _token: "{{ csrf_token() }}"};
