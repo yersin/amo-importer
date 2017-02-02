@@ -13,7 +13,7 @@
     <hr>
     {!! $rubrics->render() !!}
     <script>
-        $(".rubric").on("change", function () {
+        $("body").on("change", ".rubric", function () {
             var isNeed =  $(this).is(":checked");
             var id = $(this).closest("tr").data("id");
             var params = {id:id, need: isNeed, _token: "{{ csrf_token() }}"};
