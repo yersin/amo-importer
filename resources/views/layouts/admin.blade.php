@@ -74,7 +74,8 @@
     $("#search").on("change", function () {
         var search = $("#search").val();
         var type = $("#search").data("type");
-        if(search){
+        if(search || search == ""){
+            $(".rubric-table").html("<div align='center'><img src='/img/loader.gif' height='50'></div>");
             $.ajax({
                 url: "/admin/rubric-search/" + search,
                 method: "get",

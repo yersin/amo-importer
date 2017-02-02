@@ -1,3 +1,4 @@
+
 <table class="table table-bordered table-striped table-hover">
     <tr>
         <th>#</th>
@@ -24,4 +25,9 @@
             </td>
         </tr>
     @endforeach
+    @if($rubrics->count() < 1)
+        <tr>
+            <td colspan="4" align="center"><h3>Не найдено</h3></td>
+        </tr>
+    @endif
 </table>
