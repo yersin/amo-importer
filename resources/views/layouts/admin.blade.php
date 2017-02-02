@@ -70,6 +70,21 @@
             }
         });
     });
+
+    $("#search").on("change", function () {
+        var search = $("#search").val();
+        var type = $("#search").data("type");
+        if(search){
+            $.ajax({
+                url: "/admin/rubric-search/" + search,
+                method: "get",
+                data:{type:type},
+                success: function (data) {
+                    $(".rubric-table").html(data);
+                }
+            });
+        }
+    });
 </script>
 
 

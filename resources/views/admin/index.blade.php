@@ -5,25 +5,11 @@
             Рубрика успешно изменена
         </div>
     </div>
-    <table class="table table-bordered table-striped table-hover">
-        <tr>
-            <th>#</th>
-            <th>Категория</th>
-            <th>Рубрика</th>
-            <th>Нужные/Ненужные</th>
-        </tr>
-        <tr>
-            @foreach($rubrics as $key => $rubric)
-                <tr data-id="{{ $rubric->rubric_id }}">
-                    <td>{{ $key+1 }}</td>
-                    <td>{{ $rubric->title }}</td>
-                    <td>{{ $rubric->groupTitle }}</td>
-                    <td>
-                        <input type="checkbox" class="rubric"  {{ $rubric->notNeed == \App\FirmRubric::NEED ? "checked" : "" }} >
-                    </td>
-                </tr>
-            @endforeach
-    </table>
+    <input type="text" class="form-control " style="width:20%;" placeholder="🔍 Поиск" id="search" data-type="notNeed">
+    <hr>
+    <div class="rubric-table">
+        @include("admin.inc.rubric_search_table", ["type" => "notNeed"])
+    </div>
     <hr>
     {!! $rubrics->render() !!}
     <script>
@@ -48,6 +34,7 @@
                 },
             });
         }
+
         function generate(type, text) {
             var n = noty({
                 text        : text,
@@ -60,13 +47,5 @@
             });
         }
 
-     /*   function generateAll() {
-            generate('alert');
-            generate('information');
-            generate('error');
-            generate('warning');
-            generate('notification');
-            generate('success');
-        }*/
     </script>
 @stop

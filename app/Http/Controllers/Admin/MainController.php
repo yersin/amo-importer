@@ -23,8 +23,10 @@ class MainController extends Controller
     public function anyIndex(FirmRubric $firmRubric, Activity $activity)
     {
         $firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
         $rubrics = $firmRubric->orderBy("groupTitle")->paginate(20);
-        return view("admin.index", compact("rubrics"));
+        $activities = $activity->pluck("name", "id");
+        return view("admin.index", compact("rubrics", "activities"));
     }
 
     public function postIndex(Request $request, FirmRubric $firmRubric)
@@ -52,4 +54,17 @@ class MainController extends Controller
         return view("admin.set_rubric_activities", compact("rubrics", "activities"));
     }
 
+    /*
+     * AJAX
+     */
+    public function getRubricSearch($search, Activity $activity, FirmRubric $firmRubric, Request $request)
+    {
+        $firmRubric->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $activity->setConnection(session("project") == "han" ? "mysql_han" : "mysql_mk");
+        $rubrics = $firmRubric->where("title", "LIKE", "%".$search."%")
+                             ->orWhere("groupTitle", "LIKE", "%".$search."%")->get();
+        $activities = $activity->pluck("name", "id");
+        $type = $request->type;
+        return view("admin.inc.rubric_search_table", compact("rubrics", "activities", "type"));
+    }
 }
