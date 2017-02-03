@@ -84,7 +84,7 @@ class PageController extends Controller
                     $companies[] = $company;
                 }
                 $amo->company->apiAdd($companies);
-                Firm::whereIn("id", array_pluck($firm_rows, "id"))
+                $firm->whereIn("id", array_pluck($firm_rows, "id"))
                     ->update(["isIntegrated" => Firm::INTEGRATED]);
             }
 
