@@ -14,7 +14,9 @@ class Firm extends Model
 
     public function phones()
     {
-        return $this->hasMany('App\FirmTel', "firm_id", "id");
+        $phone = new FirmTel();
+        $phone->setConnection($this->getConnectionName());
+        return $this->hasMany($phone, "firm_id", "id");
     }
 
     public function category()

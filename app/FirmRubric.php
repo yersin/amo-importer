@@ -17,6 +17,8 @@ class FirmRubric extends Model
 
     public function activity()
     {
-        return $this->belongsTo('App\Activity');
+        $activity = new Activity();
+        $activity->setConnection($this->getConnectionName());
+        return $this->belongsTo($activity);
     }
 }
