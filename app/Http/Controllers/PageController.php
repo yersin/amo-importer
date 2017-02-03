@@ -6,6 +6,7 @@ use App\AmoConfig;
 use App\Firm;
 use App\Helpers\CRMHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 
 class PageController extends Controller
@@ -71,6 +72,7 @@ class PageController extends Controller
                     $company = $amo->company;
                     $company["name"] = $firm->title;
                     $company['responsible_user_id'] = $responsible_user_id;
+                    $company->addCustomField($company_fields["2gis_id"], $firm->id);
                     $company->addCustomField($company_fields["address"], $firm->address);
                     $company->addCustomField($company_fields["email"], $firm->email, "WORK");
                     $company->addCustomField($company_fields["filial"], $firm->filials);

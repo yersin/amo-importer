@@ -33,6 +33,7 @@ class CRMHelper
         "info" => "Информация",
         "payment_type" => "Вид оплаты",
         "filial" => "Филиалы",
+        "2gis_id" => "2gis"
     ];
 
     public $enums = [

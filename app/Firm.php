@@ -11,6 +11,7 @@ class Firm extends Model
     protected $table = "Firm";
     public $incrementing = false;
     public $timestamps = false;
+
     public function phones()
     {
         return $this->hasMany('App\FirmTel', "firm_id", "id");
@@ -18,7 +19,9 @@ class Firm extends Model
 
     public function category()
     {
-        return $this->belongsToMany('App\FirmRubric', "FirmRubricRel", "firm_id", "rubric_id")
+        $rubric = new FirmRubric();
+        $rubric->setConnection($this->getConnectionName());
+        return $this->belongsToMany($rubric, "FirmRubricRel", "firm_id", "rubric_id")
             ->where("notNeed", FirmRubric::NEED);
     }
 
