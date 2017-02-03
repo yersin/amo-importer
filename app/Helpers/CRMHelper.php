@@ -44,6 +44,7 @@ class CRMHelper
        "Услуги" => 4409820
     ];
 
+    public $users = [ "Dauren", "Timur"  ];
 
     public $cookie_path;
     public function __construct()
@@ -198,6 +199,30 @@ class CRMHelper
             }
         }
         return $this->company;
+    }
+
+    public function getUser($users, $manager)
+    {
+        foreach ($users as $user) {
+            if ($manager) {
+                if ($user["name"] == $manager) {
+                    return $user["id"];
+                }
+                continue;
+            }
+            for ($i = 0; $i < count($this->users); $i++) {
+                if ($user["name"] == $this->users[$i]) {
+                    return $user["id"];
+                }
+            }
+        }
+        if($manager){
+            return 0;
+        }
+        if(count($users) > 0){
+            return $users[0]["id"];
+        }
+        return null;
     }
 
 }

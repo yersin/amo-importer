@@ -57,14 +57,20 @@ class PageController extends Controller
             $total = $request->total ? $request->total: 5000;
             $chunks = $request->chunk ? $request->chunk : 200;
             $firms = $firm->integrated()->take($total)->get();
-            $custom_fields = $amo->account->apiCurrent()["custom_fields"]["companies"];
+            $amo_current_acc = $amo->account->apiCurrent();
+            $custom_fields = $amo_current_acc["custom_fields"]["companies"];
             $company_fields = $this->crm->getCompanyFields($custom_fields);
+
+            $responsible_user_id = $this->crm->getUser($amo_current_acc["users"], $request->name);
+            if($responsible_user_id == 0)
+                return back()->with("message", (object)["status" => "danger", "text" => "Такого менеджера не существует "]);
+
             foreach (array_chunk($firms->all(), $chunks) as $key => $firm_rows){
                 $companies = [];
                 foreach ($firm_rows as $firm){
                     $company = $amo->company;
                     $company["name"] = $firm->title;
-                    $company['responsible_user_id'] = 607140;
+                    $company['responsible_user_id'] = $responsible_user_id;
                     $company->addCustomField($company_fields["address"], $firm->address);
                     $company->addCustomField($company_fields["email"], $firm->email, "WORK");
                     $company->addCustomField($company_fields["filial"], $firm->filials);

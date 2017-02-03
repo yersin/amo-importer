@@ -23,6 +23,10 @@
             <label>Отправлять по (количество)</label>
             {!! Form::number('chunk', null, ["class" => "form-control"]) !!}
         </div>
+        <div class="form-group">
+            <label>Ответственный менеджер (не обязательное поле) </label>
+            {!! Form::text('name', null, ["class" => "form-control", "placeholder" => "Введите имя менеджера "]) !!}
+        </div>
         <input type="submit" class="btn btn-primary" value="Сохранить">
     {!! Form::close() !!}
 
